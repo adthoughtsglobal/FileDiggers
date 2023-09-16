@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image EXIF Data Example</title>
+</head>
+<body>
+  <h1>More Data on Image File</h1>
+  <p>Exchangeable image file format data containing information about the image, including camera settings, GPS Coords and more...</p>
+    <input type="file" id="imageInput" onchange="handleImageSelect(event)">
+    <ul id="exifDataList"></ul>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.js"></script>
+    <script>
+        function handleImageSelect(event) {
+            const imageInput = event.target;
+            const file = imageInput.files[0];
+
+            const exifDataList = document.getElementById('exifDataList');
+            exifDataList.innerHTML = ''; // Clear previous entries
+
+            EXIF.getData(file, function() {
+                const exifData = EXIF.getAllTags(this);
+                for (const tag in exifData) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${tag}: ${exifData[tag]}`;
+                    exifDataList.appendChild(listItem);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
