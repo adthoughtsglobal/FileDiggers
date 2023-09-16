@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Metadata Example</title>
+</head>
+<body>
+  <h1>More Data on video files</h1>
+    <video controls id="videoElement">
+        <source src="sample.mp4" type="video/mp4">
+    </video>
+    <ul id="videoMetadataList"></ul>
+
+    <script>
+        const videoElement = document.getElementById('videoElement');
+        const videoMetadataList = document.getElementById('videoMetadataList');
+
+        videoElement.addEventListener('loadedmetadata', function() {
+            const duration = videoElement.duration;
+            const resolution = videoElement.videoWidth + 'x' + videoElement.videoHeight;
+
+            const listItemDuration = document.createElement('li');
+            listItemDuration.textContent = `Duration: ${duration} seconds`;
+
+            const listItemResolution = document.createElement('li');
+            listItemResolution.textContent = `Resolution: ${resolution}`;
+
+            videoMetadataList.appendChild(listItemDuration);
+            videoMetadataList.appendChild(listItemResolution);
+        });
+    </script>
+</body>
+</html>
