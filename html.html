@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HTML Structure Example</title>
+</head>
+<body>
+  <h1>Get More HTML File data</h1>
+    <input type="file" id="fileInput" accept=".html">
+    <button id="showStructureButton">Show HTML Structure</button>
+    <pre id="htmlStructure"></pre>
+
+    <script>
+        document.getElementById('showStructureButton').addEventListener('click', function() {
+            const fileInput = document.getElementById('fileInput');
+            const selectedFile = fileInput.files[0];
+            
+            if (!selectedFile) {
+                alert('Please select an HTML file.');
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const htmlString = event.target.result;
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlString, 'text/html');
+
+                const structure = {};
+                traverseElement(doc.documentElement, '');
+
+                const htmlStructure = JSON.stringify(structure, null, 2);
+                document.getElementById('htmlStructure').textContent = htmlStructure;
+            };
+
+            reader.readAsText(selectedFile);
+
+            function traverseElement(element, parentKey) {
+                const tagName = element.tagName.toLowerCase();
+                const key = parentKey ? `${parentKey}.${tagName}` : tagName;
+                const elementDetails = {
+                    id: element.id,
+                    classList: Array.from(element.classList),
+                    attributes: {},
+                    innerText: element.innerText,
+                };
+
+                Array.from(element.attributes).forEach((attribute) => {
+                    elementDetails.attributes[attribute.name] = attribute.value;
+                });
+
+                structure[key] = elementDetails;
+
+                Array.from(element.children).forEach((childElement) => {
+                    traverseElement(childElement, key);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
